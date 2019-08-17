@@ -335,7 +335,14 @@ client.on('message', async (message) => {
     }
   })
   let args = message.content.split(' ')
-  if((currServer.prefix !== message.content[0]) && !(args[0].substr(0,3) === '///' && (message.author.id === appowner.id || message.author.id === currServer.id))) return
+  if(currServer.prefix !== undefined)
+  {
+    if((currServer.prefix !== message.content[0]) && !(args[0].substr(0,3) === '///' && message.author.id === appowner.id)) return
+  }
+  else if(message.author.id !== currServer.owner && !(args[0].substr(0,3) === '///' && message.author.id === appowner.id))
+  {
+    return
+  }
 
   let cmd = (args[0].substr(0,3) === '///') ? args[0].substr(3, args[0].length) : args[0].substr(1,args[0].length)
   if(isChannel.length > 0 || message.channel.type == 'dm')
