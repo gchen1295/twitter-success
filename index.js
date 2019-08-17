@@ -159,6 +159,21 @@ async function getServers()
   return servers
 }
 
+async function firstStart()
+{
+  // Check database for a collection
+  let s = await Server.findOne({serverID: process.env.MAIN_SERVER})
+  if(s)
+  {
+    return
+  }
+  else
+  {
+    let firstSetup = new Server({serverID: process.env.MAIN_SERVER, owner: appowner.id})
+    await firstSetup.save()
+  }
+}
+
 client.login(process.env.BOT_TOKEN).then(() => {
   console.log("Logged in")
   mongoose.connect(`mongodb://${mongoserver}/${db}`, {
@@ -168,6 +183,7 @@ client.login(process.env.BOT_TOKEN).then(() => {
     console.log("Mongo connected")
     let appl = await client.fetchApplication()
     appowner = appl.owner
+    await firstStart()
     let s = await setupCheck()
     if(s.length > 0)
     {
