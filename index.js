@@ -318,6 +318,13 @@ client.on('message', async (message) => {
         currServer = allServers[i]
         break
       }
+      if(client.bot.appowner.id === message.author.id)
+      {
+        guild = undefined
+        isAdmin = true
+        currServer = undefined
+        break
+      }
     }
   }
   else
