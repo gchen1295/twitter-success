@@ -183,7 +183,7 @@ client.login(process.env.BOT_TOKEN).then(() => {
     console.log("Mongo connected")
     let appl = await client.fetchApplication()
     appowner = appl.owner
-    await firstStart()
+    // await firstStart()
     let s = await setupCheck()
     if(s.length > 0)
     {
@@ -195,8 +195,6 @@ client.login(process.env.BOT_TOKEN).then(() => {
       let owner = client.guilds.get(process.env.MAIN_SERVER).members.get(appowner.id)
       owner.send({embed: emb})
     }
-    
-
   })
 })
 
@@ -207,7 +205,6 @@ client.on('message', async (message) => {
   let guild
   let currServer
 
-  console.log(message)
   let isSuccess = allServers.filter((server)=>{
     if(message.channel.id === server.successChannel) currServer = server
     return message.channel.id === server.successChannel
@@ -294,37 +291,74 @@ client.on('message', async (message) => {
       })
     }
   }
-  
   ///
   /// Check for approriate permissions and sets current guild
   ///
-  if(allServers)
+  currServer = message.channel.type === 'dm' ? undefined : await Server.findOne({serverID: message.guild.id})
+  if(currServer)
   {
-    for(let i in allServers)
+    if(currServer.admins.includes(message.author.id))
     {
-      for(let j in allServers[i].admins)
-      {
-        if(message.author.id === allServers[i].admins[j])
-        {
-          currServer = allServers[i]
-          guild = client.guilds.get(allServers[i].serverID)
-          isAdmin = true
-          break
-        }
-      }
-      if(allServers[i].owner === message.author.id)
-      {
-        guild = client.guilds.get(allServers[i].serverID)
-        isAdmin = true
-        currServer = allServers[i]
-        break
-      }
+      guild = client.guilds.get(currServer.serverID)
+      isAdmin = true
+    }
+    if(currServer.owner === message.author.id)
+    {
+      guild = client.guilds.get(currServer.serverID)
+      isAdmin = true
+    }
+    if(appowner.id === message.author.id)
+    {
+      guild = client.guilds.get(currServer.serverID)
+      isAdmin = true
     }
   }
   else
   {
-    return
+    if(message.author.id === appowner.id)
+    {
+      currServer = {
+        prefix: 't//',
+        color: 8516884,
+        owner: appowner.id,
+        memberRoles: [],
+        admins: [],
+        channels: [message.channel.id],
+        serverID: message.guild ? message.guild.id : '',
+      }
+    }
+    else
+    {
+      return
+    }
   }
+  // if(allServers)
+  // {
+  //   for(let i in allServers)
+  //   {
+  //     for(let j in allServers[i].admins)
+  //     {
+  //       if(message.author.id === allServers[i].admins[j]) // Check if author is admin and
+  //       {
+  //         currServer = allServers[i]
+  //         guild = client.guilds.get(allServers[i].serverID)
+  //         isAdmin = true
+  //         break
+  //       }
+  //     }
+  //     if(allServers[i].owner === message.author.id)
+  //     {
+  //       guild = client.guilds.get(allServers[i].serverID)
+  //       isAdmin = true
+  //       currServer = allServers[i]
+  //       break
+  //     }
+  //   }
+  // }
+  // else
+  // {
+  //   return
+  // }
   let isChannel = allServers.filter((server)=>{
     if(message.channel.type !== 'dm')
     {
@@ -336,16 +370,22 @@ client.on('message', async (message) => {
     }
   })
   let args = message.content.split(' ')
-  if(currServer.prefix !== undefined)
+  
+  if(currServer.prefix === undefined)
   {
-    if((currServer.prefix !== message.content[0]) && !(args[0].substr(0,3) === '///' && message.author.id === appowner.id)) return
-  }
-  else if(message.author.id !== currServer.owner && !(args[0].substr(0,3) === '///' && message.author.id === appowner.id))
-  {
+    
+    if(message.author.id !== currServer.owner && !(message.author.id === appowner.id))
+    {
+      message.channel.send({embed: {
+        title: "No Prefix Set!",
+        description: `No prefix is set for this server! For help DM ${appowner.tag}`,
+        color: currServer.color == undefined ? 0x000000 : currServer.color
+      }})
+    }
     return
   }
 
-  let cmd = (args[0].substr(0,3) === '///') ? args[0].substr(3, args[0].length) : args[0].substr(1,args[0].length)
+  let cmd = args[0].substr(currServer.prefix.length ,  args[0].length)
   if(isChannel.length > 0 || message.channel.type == 'dm')
   {
     // Regular commands here
@@ -480,7 +520,6 @@ client.on('message', async (message) => {
       let points = parseInt(args[2])
       if(userTag)
       {
-        console.log
         if(isNaN(points)){
           let emb = 
           {
@@ -511,7 +550,7 @@ client.on('message', async (message) => {
     }
   }
 
-  if(cmd === 'reset' && message.author.id === currServer.owner && (isChannel.length > 0 || message.channel.type == 'dm'))
+  if(cmd === 'reset' && isAdmin && (isChannel.length > 0))
   {
     let m1 = await message.channel.send({embed: {
       color: 0xff0000,
@@ -709,7 +748,7 @@ client.on('message', async (message) => {
       }
     }
     ///
-    /// Create setup to client
+    /// Create setup for client
     if(cmd === "setup-create" && message.author.id === appowner.id)
     {
       let foundGuild = client.guilds.get(args[1])
@@ -733,6 +772,72 @@ client.on('message', async (message) => {
         message.author.send({embed: {
           color: 0xff000,
           title: "Error finding guild!"
+        }})
+      }
+    }
+    ///
+    /// Removes a client
+    if(cmd === "removeServer" && message.author.id === appowner.id)
+    {
+      let toRemove = await Server.findOne({serverID: args[1]})
+      
+      if(toRemove)
+      {
+        let trInfo = client.guilds.get(toRemove.serverID)
+        let m1 = await message.channel.send({embed: {
+          color: 0xff0000,
+          title: `Confirm server removal`,
+          description: `Are you sure you want to remove ${trInfo.name} | ${toRemove.serverID}?`
+        }})
+        await m1.react('✅')
+        await m1.react('❌')
+    
+        const filter = (react, user) => {
+          return ['✅', '❌'].includes(react.emoji.name) && user.id === message.author.id
+        }
+        let react = await m1.awaitReactions(filter, {max: 1})
+        if(react.first()._emoji.name === '✅')
+        {
+          m1 = await message.channel.send({embed: {
+            color: 0xff0000,
+            title: "Please confirm once more."
+          }})
+          await m1.react('✅')
+          await m1.react('❌')
+      
+          const filter = (react, user) => {
+            return ['✅', '❌'].includes(react.emoji.name) && user.id === message.author.id
+          }
+          react = await m1.awaitReactions(filter, {max: 1})
+          if(react.first()._emoji.name === '✅')
+          {
+            let dc = await setup.removeServer(args[1])
+            if(dc){
+              await message.channel.send({embed: {
+                color: currServer.color,
+                title: `Server Removed`,
+                description: `${trInfo.name} has been removed from subscribers`
+              }})
+            }
+            else
+            {
+              await message.channel.send({embed: {
+                color: 0xff0000,
+                title: `Problem removing server!`
+              }})
+            }
+          }
+        }
+        else
+        {
+          await message.channel.send('Cancelled.')
+        }
+      }
+      else
+      {
+        await message.channel.send({embed: {
+          color: 0xff0000,
+          title: "Server not found!"
         }})
       }
     }

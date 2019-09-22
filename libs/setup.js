@@ -414,8 +414,22 @@ async function createSetup(client, serverID, userID)
   }
 }
 
+async function removeServer(serverID)
+{
+  try
+  {
+    await Server.deleteOne({serverID: serverID})
+    await Points.deleteOne({serverID: serverID})
+    return true
+  }catch(err)
+  {
+    return false
+  }
+}
+
 module.exports = {
   'setupServer': setupServer,
   'setupTwitter': setupTwitter,
-  'createSetup': createSetup
+  'createSetup': createSetup,
+  'removeServer': removeServer
 }
