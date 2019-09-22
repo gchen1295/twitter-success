@@ -392,6 +392,8 @@ client.on('message', async (message) => {
     }
     for(let i in server.channels)
     {
+      console.log(server.channels[i])
+      console.log(message.channel.id)
       return message.channel.id === server.channels[i]
     }
   })
