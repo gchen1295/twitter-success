@@ -294,7 +294,34 @@ client.on('message', async (message) => {
   ///
   /// Check for approriate permissions and sets current guild
   ///
-  currServer = message.channel.type === 'dm' ? undefined : await Server.findOne({serverID: message.guild.id})
+
+  if(message.channel.type === 'dm')
+  {
+    for(let i in allServers)
+    {
+      for(let j in allServers[i].admins)
+      {
+        if(message.author.id === allServers[i].admins[j]) // Check if author is admin and
+        {
+          currServer = allServers[i]
+          guild = client.guilds.get(allServers[i].serverID)
+          isAdmin = true
+          break
+        }
+      }
+      if(allServers[i].owner === message.author.id)
+      {
+        guild = client.guilds.get(allServers[i].serverID)
+        isAdmin = true
+        currServer = allServers[i]
+        break
+      }
+    }
+  }
+  else
+  {
+    currServer = await Server.findOne({serverID: message.guild.id})
+  }
   if(currServer)
   {
     if(currServer.admins.includes(message.author.id))
@@ -373,15 +400,14 @@ client.on('message', async (message) => {
   
   if(currServer.prefix === undefined)
   {
-    
-    if(message.author.id !== currServer.owner && !(message.author.id === appowner.id))
-    {
-      message.channel.send({embed: {
-        title: "No Prefix Set!",
-        description: `No prefix is set for this server! For help DM ${appowner.tag}`,
-        color: currServer.color == undefined ? 0x000000 : currServer.color
-      }})
-    }
+    // if(message.author.id === currServer.owner || message.author.id === appowner.id)
+    // {
+    //   message.channel.send({embed: {
+    //     title: "No Prefix Set!",
+    //     description: `No prefix is set for this server! For help DM ${appowner.tag}`,
+    //     color: currServer.color == undefined ? 0x000000 : currServer.color
+    //   }})
+    // }
     return
   }
   if(args[0].substr(0, currServer.prefix.length) !== currServer.prefix)
