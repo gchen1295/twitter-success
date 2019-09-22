@@ -67,7 +67,7 @@ async function setupServer(client, serverID, userID)
         serverOwner.send({embed: {
           title: "Setup timed out!",
           color: 0xff0000,
-          description: "Setup timed out! Please DM the bot ///setup to restart."
+          description: "Setup timed out! Please DM the bot t//setup to restart."
         }})
         setupFin = true
         return
@@ -231,7 +231,7 @@ async function setupServer(client, serverID, userID)
           thumbnail: {
             url: "https://icon-library.net/images/twitter-svg-icon/twitter-svg-icon-29.jpg"
           },
-          description: "Please setup twitter account access.\n\nUse  ___///twitter___  to setup your twitter account."
+          description: "Please setup twitter account access.\n\nUse  ___t//twitter___  to setup your twitter account."
         }})
         serverconfig.setupDone = true
         let s = new Server(serverconfig)
@@ -401,7 +401,7 @@ async function createSetup(client, serverID, userID)
     serverOwner.send({embed: {
       color: 0x00ff00,
       title: "Client Added!",
-      description: "You may now setup the bot using ___///setup___"
+      description: "You may now setup the bot using ___t//setup___"
     }})
     let newServer = Server(serverconfig)
     await newServer.save()

@@ -322,19 +322,18 @@ client.on('message', async (message) => {
   {
     currServer = await Server.findOne({serverID: message.guild.id})
   }
+
   if(currServer)
   {
     if(currServer.admins.includes(message.author.id))
     {
       guild = client.guilds.get(currServer.serverID)
       isAdmin = true
-    }
-    if(currServer.owner === message.author.id)
+    } else if(currServer.owner === message.author.id)
     {
       guild = client.guilds.get(currServer.serverID)
       isAdmin = true
-    }
-    if(appowner.id === message.author.id)
+    } else if(appowner.id === message.author.id)
     {
       guild = client.guilds.get(currServer.serverID)
       isAdmin = true
@@ -408,6 +407,10 @@ client.on('message', async (message) => {
     //     color: currServer.color == undefined ? 0x000000 : currServer.color
     //   }})
     // }
+    if(isAdmin)
+    {
+      currServer.prefix = 't//'
+    }
     return
   }
   if(args[0].substr(0, currServer.prefix.length) !== currServer.prefix)
