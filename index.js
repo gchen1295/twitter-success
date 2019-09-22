@@ -384,6 +384,10 @@ client.on('message', async (message) => {
     }
     return
   }
+  if(args[0].substr(0, prefix.length) !== currServer.prefix)
+  {
+    return
+  }
 
   let cmd = args[0].substr(currServer.prefix.length ,  args[0].length)
   if(isChannel.length > 0 || message.channel.type == 'dm')
@@ -401,11 +405,11 @@ client.on('message', async (message) => {
           color: currServer.color == undefined ? 0x000000 : currServer.color,
           fields: [
             {
-              name: "///setup-create <guildID> <ownerID>",
+              name: "t//setup-create <guildID> <ownerID>",
               value: "Creates subscription for guild and sends DM to corresponding user."
             },
             {
-              name: "///listServers",
+              name: "t//listServers",
               value: "List current servers the bot is working on."
             }
           ]
