@@ -41,14 +41,14 @@ async function setupServer(client, serverID, userID)
           msg = await serverOwner.send("Enter bot prefix:")
           prefix = await msg.channel.awaitMessages(m => m.author.id === userID, { maxMatches: 1, time: 60000, errors: ['time'] })
           prefix = prefix.first().content.trim()
-          if(prefix.length === 1)
+          if(prefix.length <= 2 && prefix.length > 0)
           {
             prefixGood = true
             serverconfig.prefix = prefix
           }
           else
           {
-            await serverOwner.send("Prefix must be a single character.")
+            await serverOwner.send("Prefix can be 2 characters max.")
           }
         }
         
