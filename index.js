@@ -392,9 +392,12 @@ client.on('message', async (message) => {
     }
     for(let i in server.channels)
     {
-      console.log(server.channels)
-      return message.channel.id === server.channels[i]
+      if(message.channel.id === server.channels[i])
+      {
+        return true
+      }
     }
+    return false
   })
   let args = message.content.split(' ')
   
