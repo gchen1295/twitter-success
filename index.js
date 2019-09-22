@@ -207,6 +207,7 @@ client.on('message', async (message) => {
   let guild
   let currServer
 
+  console.log(message)
   let isSuccess = allServers.filter((server)=>{
     if(message.channel.id === server.successChannel) currServer = server
     return message.channel.id === server.successChannel
