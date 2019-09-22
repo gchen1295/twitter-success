@@ -384,7 +384,7 @@ client.on('message', async (message) => {
     }
     return
   }
-  if(args[0].substr(0, prefix.length) !== currServer.prefix)
+  if(args[0].substr(0, currServer.prefix.length) !== currServer.prefix)
   {
     return
   }
