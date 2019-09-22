@@ -231,7 +231,7 @@ async function setupServer(client, serverID, userID)
           thumbnail: {
             url: "https://icon-library.net/images/twitter-svg-icon/twitter-svg-icon-29.jpg"
           },
-          description: "Please setup twitter account access.\n\nUse  ___t//twitter___  to setup your twitter account."
+          description: `Please setup twitter account access.\n\nUse  ___${serverconfig.prefix}twitter___  to setup your twitter account.`
         }})
         serverconfig.setupDone = true
         let s = new Server(serverconfig)
