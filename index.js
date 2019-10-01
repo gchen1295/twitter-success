@@ -67,7 +67,7 @@ async function deductPoints(serverID, userID, userTag, points)
     }
     else
     {
-      let n = new Points({ serverID: serverID, userID: userID, userTag: userTag, points: points})
+      let n = new Points({ serverID: serverID, userID: userID, userTag: userTag, points: 0})
       await n.save()
       return true
     }
@@ -216,7 +216,7 @@ client.on('message', async (message) => {
     if (message.attachments.size > 0) {
       message.attachments.forEach(att => {
         let url = att.url.toLowerCase()
-        if (url.includes('.png', url.length - 4) || url.includes('.jpg', url.length - 4)) {
+        if (url.includes('.png', url.length - 4) || url.includes('.jpg', url.length - 4) || url.includes('.jpeg', url.length - 5)) {
           request.get(att.url, (err, response, body) => {
             if (!err && response.statusCode == 200) {
               let data = Buffer.from(body).toString('base64');
@@ -251,7 +251,7 @@ client.on('message', async (message) => {
                     return ['\uD83D\uDDD1'].includes(reaction.emoji.name) && user.id === message.author.id;
                   }
                   //Add points to user here
-                  await addPoints(currServer.id, message.author.id, 1)
+                  await addPoints(currServer.id, message.author.id, message.author.tag, 1)
 
                   msg.awaitReactions(filter, {
                     max: 1
