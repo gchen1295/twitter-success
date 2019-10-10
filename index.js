@@ -552,6 +552,7 @@ client.on('message', async (message) => {
   if(cmd === 'add' && isAdmin && (isChannel.length > 0 || message.channel.type == 'dm'))
   {
     let userID = args[1]
+    if(guild === undefined) return
     let user = guild.members.get(userID)
     if(user)
     {
@@ -592,6 +593,7 @@ client.on('message', async (message) => {
 
   if(cmd === 'reset' && isAdmin && (isChannel.length > 0))
   {
+    if(guild === undefined) return
     let m1 = await message.channel.send({embed: {
       color: 0xff0000,
       title: "Are you sure you want to reset all points for the server?"
@@ -640,6 +642,7 @@ client.on('message', async (message) => {
   if(cmd === 'deduct' && isAdmin && (isChannel.length > 0 || message.channel.type == 'dm'))
   {
     let userID = args[1]
+    if(guild === undefined) return
     let user = guild.members.get(userID).user
     if(user)
     {
@@ -678,6 +681,7 @@ client.on('message', async (message) => {
   }
   if(cmd === 'points' && (isChannel.length > 0 || message.channel.type == 'dm'))
   {
+    if(guild === undefined) return
     let userPoints = await getPoints(currServer.id, message.author.id)
     if(userPoints)
     {
@@ -698,6 +702,7 @@ client.on('message', async (message) => {
 
   if(cmd === 'getPoints' && isAdmin && (isChannel.length > 0 || message.channel.type == 'dm'))
   {
+    if(guild === undefined) return
     let userPoints = await getPoints(currServer.id, args[1])
     if(userPoints)
     {
@@ -724,6 +729,7 @@ client.on('message', async (message) => {
     /// Edit success channel
     if(cmd === "editSuccess" && isAdmin)
     {
+      if(guild === undefined) return
       if(guild.channels.some(cha => cha.id == args[1]))
       {
         currServer.successChannel = args[1]
@@ -969,6 +975,7 @@ client.on('message', async (message) => {
       }
       else if(message.author.id === currServer.owner)
       {
+        if(guild === undefined) return
         let foundUsers = []
         for(let i in currServer.admins)
         {
@@ -999,6 +1006,7 @@ client.on('message', async (message) => {
       {
         // Grabs admin of server the current user is admin or owner of
         let foundUsers = []
+        if(guild === undefined) return
         for(let i = 1; i < args.length; ++i)
         {
           let cm = await guild.members.get(args[i])
@@ -1028,6 +1036,7 @@ client.on('message', async (message) => {
     {
       if(message.author.id == currServer.owner)
       {
+        if(guild === undefined) return
         let foundUsers = []
         for(let i = 1; i < args.length; ++i)
         {
@@ -1095,6 +1104,7 @@ client.on('message', async (message) => {
         else
         {
           let foundChannels = []
+          if(guild === undefined) return
           for(let i in currServer.channels)
           {
             let cm = await guild.members.get(currServer.channels[i])
@@ -1119,6 +1129,7 @@ client.on('message', async (message) => {
       else if(message.author.id === currServer.owner)
       {
         let foundChannels = []
+        if(guild === undefined) return
         for(let i in currServer.channels)
         {
           let cm = await guild.members.get(currServer.channels[i])
@@ -1148,6 +1159,7 @@ client.on('message', async (message) => {
       {
         // Grabs admin of server the current user is admin or owner of
         let foundChannels = []
+        if(guild === undefined) return
         for(let i = 1; i < args.length; ++i)
         {
           let cm = await guild.channels.get(args[i])
@@ -1177,6 +1189,7 @@ client.on('message', async (message) => {
     {
       if(message.author.id == currServer.owner || isAdmin)
       {
+        if(guild === undefined) return
         let foundChannels = []
         for(let i = 1; i < args.length; ++i)
         {
@@ -1381,3 +1394,6 @@ client.on('message', async (message) => {
       }
   }
 })
+
+
+
