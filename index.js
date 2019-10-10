@@ -1104,13 +1104,13 @@ client.on('message', async (message) => {
         else
         {
           let foundChannels = []
-          if(guild === undefined) return
+          if(currServer === undefined) return
           for(let i in currServer.channels)
           {
-            let cm = await guild.members.get(currServer.channels[i])
+            let cm = await guild.channels.get(currServer.channels[i])
             if(cm)
             {
-              foundChannels.push(`${cm.user.tag} | ${cm.id}`)
+              foundChannels.push(`${cm.name} | ${currServer.channels[i]}`)
             }
           }
           if(foundChannels.length > 0)
