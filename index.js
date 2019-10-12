@@ -432,7 +432,6 @@ client.on('message', async (message) => {
     }
     else
     {
-      console.log("NOT ADMIN")
       return
     }
   }
@@ -440,7 +439,7 @@ client.on('message', async (message) => {
   {
     return
   }
-
+  console.log(isChannel)
   let cmd = args[0].substr(currServer.prefix.length ,  args[0].length)
   if(isChannel.length > 0 || message.channel.type == 'dm')
   {
