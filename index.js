@@ -432,6 +432,7 @@ client.on('message', async (message) => {
     }
     else
     {
+      console.log("NOT ADMIN")
       return
     }
   }
