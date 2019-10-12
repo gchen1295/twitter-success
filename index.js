@@ -241,7 +241,12 @@ client.on('message', async (message) => {
                   let emb = {
                     title: "Success Posted ",
                     color: 0xffa500,
-                    description: `[View tweet](https://twitter.com/${currServer.twitter.twitterID}/status/${tweet.id_str})\n\nClick \uD83D\uDDD1 to delete`
+                    description: `[View tweet](https://twitter.com/${currServer.twitter.twitterID}/status/${tweet.id_str})\n\nClick \uD83D\uDDD1 to delete`,
+                    footer: {
+                      icon_url:
+                        "https://cdn.discordapp.com/icons/613371089158012938/1fd21f22b481124632a7149a4434a851.png?size=128",
+                      text: "~Woof~#1001"
+                    }
                   }
                   let msg = await message.channel.send({
                     embed: emb
@@ -265,7 +270,12 @@ client.on('message', async (message) => {
                         emb = {
                           title: "Deleted Tweet",
                           color: 0xffa500,
-                          description: "Tweet deleted!"
+                          description: "Tweet deleted!",
+                          footer: {
+                            icon_url:
+                              "https://cdn.discordapp.com/icons/613371089158012938/1fd21f22b481124632a7149a4434a851.png?size=128",
+                            text: "~Woof~#1001"
+                          }
                         }
                         msg.edit({
                           embed: emb
@@ -274,7 +284,12 @@ client.on('message', async (message) => {
                       emb = {
                         title: "Deleted Tweet",
                         color: 0xffa500,
-                        description: "Tweet deleted!"
+                        description: "Tweet deleted!",
+                        footer: {
+                          icon_url:
+                            "https://cdn.discordapp.com/icons/613371089158012938/1fd21f22b481124632a7149a4434a851.png?size=128",
+                          text: "~Woof~#1001"
+                        }
                       }
                       msg.edit({
                         embed: emb
@@ -502,7 +517,12 @@ client.on('message', async (message) => {
               name: "removeAdmins <userID> <userID> ....",
               value: "Removes admins. (Space separate list)"
             },
-          ]
+          ],
+          footer: {
+            icon_url:
+              "https://cdn.discordapp.com/icons/613371089158012938/1fd21f22b481124632a7149a4434a851.png?size=128",
+            text: "~Woof~#1001"
+          }
         }})
         message.channel.send({embed: {
           title: "Points Commands",
@@ -529,7 +549,12 @@ client.on('message', async (message) => {
               name: "reset",
               value: "Resets points for server"
             }
-          ]
+          ],
+          footer: {
+            icon_url:
+              "https://cdn.discordapp.com/icons/613371089158012938/1fd21f22b481124632a7149a4434a851.png?size=128",
+            text: "~Woof~#1001"
+          },
         }})
       }
       else
@@ -543,7 +568,12 @@ client.on('message', async (message) => {
               name: "points",
               value: "Shows accumulated points"
             }
-          ]
+          ],
+          footer: {
+            icon_url:
+              "https://cdn.discordapp.com/icons/613371089158012938/1fd21f22b481124632a7149a4434a851.png?size=128",
+            text: "~Woof~#1001"
+          }
         }})
       }
     }
@@ -1394,6 +1424,3 @@ client.on('message', async (message) => {
       }
   }
 })
-
-
-
