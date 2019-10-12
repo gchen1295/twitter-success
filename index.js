@@ -353,6 +353,10 @@ client.on('message', async (message) => {
       guild = client.guilds.get(currServer.serverID)
       isAdmin = true
     }
+    else
+    {
+      guild = client.guilds.get(currServer.serverID)
+    }
   }
   else
   {
@@ -711,8 +715,6 @@ client.on('message', async (message) => {
   }
   if(cmd === 'points' && (isChannel.length > 0 || message.channel.type == 'dm'))
   {
-    console.log("Here")
-    console.log(guild)
     if(guild === undefined) return
     let userPoints = await getPoints(currServer.id, message.author.id)
     if(userPoints)
@@ -724,10 +726,14 @@ client.on('message', async (message) => {
     }
     else
     {
-      let serverOwner = guild.members.get(currServer.owner)
+      // let serverOwner = guild.members.get(currServer.owner)
+      // message.channel.send({embed:{
+      //   color: 0xff0000,
+      //   title: `User not found in database. Please contact ${serverOwner.user.tag}`
+      // }})
       message.channel.send({embed:{
-        color: 0xff0000,
-        title: `User not found in database. Please contact ${serverOwner.user.tag}`
+        color: currServer.color,
+        title: `Points: 0`
       }})
     }
   }
