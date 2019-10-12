@@ -439,7 +439,7 @@ client.on('message', async (message) => {
   {
     return
   }
-  console.log(isChannel)
+
   let cmd = args[0].substr(currServer.prefix.length ,  args[0].length)
   if(isChannel.length > 0 || message.channel.type == 'dm')
   {
@@ -711,6 +711,8 @@ client.on('message', async (message) => {
   }
   if(cmd === 'points' && (isChannel.length > 0 || message.channel.type == 'dm'))
   {
+    console.log("Here")
+    console.log(guild)
     if(guild === undefined) return
     let userPoints = await getPoints(currServer.id, message.author.id)
     if(userPoints)
